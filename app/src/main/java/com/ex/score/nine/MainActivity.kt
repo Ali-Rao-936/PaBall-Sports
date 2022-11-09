@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.ex.score.nine.domain.models.HomeBody
 import com.ex.score.nine.domain.models.VideosResponse
 import com.ex.score.nine.presentation.HomeStateModel
 import com.ex.score.nine.presentation.HomeViewModel
@@ -29,6 +30,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         initObserver()
+
+        viewModel.getMainStreams(HomeBody("", "", "ali@bluewhale.host"))
     }
 
     private fun initObserver() {
