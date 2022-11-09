@@ -1,18 +1,15 @@
-package com.ex.score.nine
+package com.ex.score.nine.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.ex.score.nine.R
 import com.ex.score.nine.domain.models.HomeBody
 import com.ex.score.nine.domain.models.VideosResponse
-import com.ex.score.nine.presentation.HomeStateModel
-import com.ex.score.nine.presentation.HomeViewModel
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
