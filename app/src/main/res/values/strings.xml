@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PaBall Sports Quiz</string>
+    <string name="no_internet_connection_message">No network available, please check your WiFi or Data connection</string>
+    <string name="no_internet_active_message">No internet available, please check your connected WIFi or Data</string>
+</resources>
