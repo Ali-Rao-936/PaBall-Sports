@@ -112,4 +112,7 @@ dependencies {
     // Circle Image view
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    implementation("com.tbuonomo:dotsindicator:4.3")
+    implementation 'com.github.CodeBoy722:ViewPager2_Transformers:1.0.0'
+
 }
