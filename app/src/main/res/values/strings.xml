@@ -21,4 +21,7 @@
     <string name="onboarding_header_3">Get Ready, be a Superstar!</string>
     <string name="onboarding_body_3">Gather all the poins as much as you can, be a superstar in your class with Quizzy!</string>
 
+    <string name="players">Players</string>
+    <string name="teams">Teams</string>
+
 </resources>
