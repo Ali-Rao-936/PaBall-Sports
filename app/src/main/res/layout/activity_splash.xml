@@ -22,7 +22,7 @@
         android:id="@+id/tv_interactive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/nunito_sans_bold"
+        android:fontFamily="@font/sans_bold"
         android:text="@string/interactive_quiz"
         android:textSize="@dimen/_16sdp"
         android:textColor="@color/grey_dark"
@@ -37,7 +37,7 @@
         android:id="@+id/tv_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/nunito_sans_regular"
+        android:fontFamily="@font/sans_regular"
 
         android:textSize="@dimen/_10sdp"
         android:text="@string/only_quiz"
