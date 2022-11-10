@@ -1,16 +1,14 @@
 package com.ex.score.nine.data
 
-import com.ex.score.nine.domain.models.HomeBody
-import com.ex.score.nine.domain.models.VideosResponse
-import retrofit2.http.Body
-import retrofit2.http.PUT
-import retrofit2.http.Url
+import com.ex.score.nine.domain.models.BaseClassIndexNew
+import com.ex.score.nine.domain.models.lineup.Players
+import retrofit2.http.*
 
 interface Api {
 
-    @PUT
-    suspend fun getHomeVideos(
-        @Url url: String,
-        @Body body: HomeBody
-    ) : VideosResponse
+    @GET("/api/zqbf-list-page/{locale}/{page}")
+    suspend fun getHomeMatchesData(@Path("locale") locale: String, @Path("page") pageNumber: String): BaseClassIndexNew
+
+    @GET("/api/zqbf-list-lineup")
+    suspend fun getPlayersLineUp() : Players
 }

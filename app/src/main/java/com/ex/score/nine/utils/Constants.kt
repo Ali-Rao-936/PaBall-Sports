@@ -3,9 +3,10 @@ package com.ex.score.nine.utils
 object Constants {
 
     const val APP_PREFERENCES = "app_preferences"
-    const val BaseURL = "https://wrf4mrwct0.execute-api.us-east-1.amazonaws.com/dev/"
+    const val BaseURL = "https://www.77577.live"
     const val IS_FIRST_TIME = "firsttime"
-    const val SHOW_PROMPT = "show_pormpt"
+    const val SAVED_QUESTIONS = "save_questions_list"
+    const val SHOW_PROMPT = "show_prompt"
     const val FREQUENCY: String = "show_frequency"
     const val RECREATE: String = "activity_recreate"
     const val PROMPT_URL: String = "prompt_url"

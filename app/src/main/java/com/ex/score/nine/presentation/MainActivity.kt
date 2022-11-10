@@ -1,15 +1,23 @@
 package com.ex.score.nine.presentation
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.ex.score.nine.R
-import com.ex.score.nine.domain.models.HomeBody
-import com.ex.score.nine.domain.models.VideosResponse
+import com.ex.score.nine.domain.models.BaseClassIndexNew
+import com.ex.score.nine.domain.models.Match
+import com.ex.score.nine.domain.models.PlayerBio
+import com.ex.score.nine.domain.models.TeamInfo
+import com.ex.score.nine.domain.models.lineup.Lineup
+import com.ex.score.nine.domain.models.lineup.Players
+import com.ex.score.nine.presentation.quiz.QuizActivity
+import com.ex.score.nine.presentation.quiz.RewardActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -21,6 +29,16 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModel: HomeViewModel
     val TAG: String = "MainActivity"
+    var pageNumber = 1
+    var pageCount = 0
+
+    companion object{
+        var matchesList = ArrayList<Match>()
+        var suggestionPlayersList = ArrayList<String>()
+        var suggestionTeamsList = ArrayList<String>()
+        var playersList = ArrayList<PlayerBio>()
+        var teamsList = ArrayList<TeamInfo>()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +46,15 @@ class MainActivity : AppCompatActivity() {
 
         initObserver()
 
-        viewModel.getMainStreams(HomeBody("", "", "ali@bluewhale.host"))
+        // for teams
+       viewModel.getMatches("en", "1")
+        // for players
+   //     viewModel.getPlayers()
+
+        findViewById<ImageView>(R.id.ivLogoMain).setOnClickListener {
+            startActivity(Intent(this, RewardActivity::class.java))
+        }
+
     }
 
     private fun initObserver() {
@@ -42,21 +68,143 @@ class MainActivity : AppCompatActivity() {
     private fun handleState(state: HomeStateModel) {
         when (state) {
             is HomeStateModel.IsLoading -> handleIsLoadingState(state.isLoading)
-            is HomeStateModel.VideoResponse -> handleMainStream(state.videos)
+            is HomeStateModel.Response -> handleTeamResponse(state.videos)
+            is HomeStateModel.PlayersResponse -> handlePlayersResponse(state.players)
             is HomeStateModel.NoInternetException -> handleNetworkFailure(state.message)
             is HomeStateModel.GeneralException -> handleException(state.message)
+            is HomeStateModel.StatusFailed -> handleFailure(state.message)
             else -> {
+                Log.d(TAG, " no state run ")
             }
         }
     }
 
-    private fun handleMainStream(videos: VideosResponse) {
-        Log.d(TAG, "success...."+videos.data.videosMetaData.count())
+    private fun handlePlayersResponse(response: Players) {
+        Log.d(TAG, " response success  " + response.lineupList.count())
+        handlePlayersData(response.lineupList)
     }
 
 
-    private fun handleException(exception: Exception) {
-        Log.d(TAG, exception.message.toString())
+    private fun handleTeamResponse(response: BaseClassIndexNew) {
+        Log.d(TAG, " response success  " + response.matchList.count())
+        pageCount = response.meta.total
+        matchesList.addAll(response.matchList)
+        handleTeamsData(matchesList)
+    }
+
+    private fun handlePlayersData(lineupList: List<Lineup>) {
+        for (data in lineupList) {
+            // we have 4 kinds of list in response each list contains player info
+            for (homeBackup in data.homeBackup) {
+                // if player have photo
+                if (homeBackup.playerPhoto.isNotEmpty()) {
+                    playersList.add(
+                        PlayerBio(
+                            homeBackup.playerName,
+                            homeBackup.playerHeight,
+                            homeBackup.playerCountry,
+                            homeBackup.playerPhoto
+                        )
+                    )
+                }
+                //  add players names for suggestions
+                if (!suggestionPlayersList.contains(homeBackup.playerName))
+                    suggestionPlayersList.add(homeBackup.playerName)
+            }
+
+            for (homeLineUp in data.homeLineup) {
+                // if player have photo
+                if (homeLineUp.playerPhoto.isNotEmpty()) {
+                    playersList.add(
+                        PlayerBio(
+                            homeLineUp.playerName,
+                            homeLineUp.playerHeight,
+                            homeLineUp.playerCountry,
+                            homeLineUp.playerPhoto
+                        )
+                    )
+                }
+                //  add players names for suggestions
+                if (!suggestionPlayersList.contains(homeLineUp.playerName))
+                    suggestionPlayersList.add(homeLineUp.playerName)
+            }
+
+            for (awayBackup in data.awayBackup) {
+                // if player have photo
+                if (awayBackup.playerPhoto.isNotEmpty()) {
+                    playersList.add(
+                        PlayerBio(
+                            awayBackup.playerName,
+                            awayBackup.playerHeight,
+                            awayBackup.playerCountry,
+                            awayBackup.playerPhoto
+                        )
+                    )
+                }
+                //  add players names for suggestions
+                if (!suggestionPlayersList.contains(awayBackup.playerName))
+                    suggestionPlayersList.add(awayBackup.playerName)
+            }
+            for (awayLineUp in data.awayLineup) {
+                // if player have photo
+                if (awayLineUp.playerPhoto.isNotEmpty()) {
+                    playersList.add(
+                        PlayerBio(
+                            awayLineUp.playerName,
+                            awayLineUp.playerHeight,
+                            awayLineUp.playerCountry,
+                            awayLineUp.playerPhoto
+                        )
+                    )
+                }
+                //  add players names for suggestions
+                if (!suggestionPlayersList.contains(awayLineUp.playerName))
+                    suggestionPlayersList.add(awayLineUp.playerName)
+            }
+
+
+        }
+
+//       for (image in playersList){
+//           println(image.photoUrl)
+//       }
+//            println(suggestionPlayersList)
+
+
+
+    }
+
+
+
+    private fun handleTeamsData(matchesList: ArrayList<Match>) {
+        for (match in matchesList) {
+            if (match.homeName.isNotEmpty() && match.leagueName.isNotEmpty() && match.homeLogo.isNotEmpty() && match.location.isNotEmpty()) {
+                teamsList.add(TeamInfo(match.homeName, match.leagueName, match.homeLogo, match.location))
+            }
+
+            if (match.homeName.isNotEmpty()) {
+                if (!suggestionTeamsList.contains(match.homeName))
+                suggestionTeamsList.add(match.homeName)
+            }
+        }
+
+//        for (team in teamsList){
+//            println(team.homeName)
+//        }
+
+   //     println(suggestionTeamsList)
+
+    }
+
+    // pagination
+    fun loadMoreMatches() {
+        if (pageNumber > pageCount)
+            return
+        else {
+            pageNumber += 1
+            viewModel.getMatches("en", pageNumber.toString())
+        }
+
     }
 
     private fun handleIsLoadingState(loading: Boolean) {
@@ -68,7 +216,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleFailure(message: String) {
-
         Log.d(TAG, "failure    $message")
         showToast(message)
     }
