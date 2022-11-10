@@ -1,4 +1,4 @@
-package com.ex.score.nine.presentation
+package com.ex.score.nine.presenter
 
 import android.content.Intent
 import android.os.Bundle

@@ -1,8 +1,7 @@
-package com.ex.score.nine.presentation
+package com.ex.score.nine.presenter
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import com.ex.score.nine.BaseActivity

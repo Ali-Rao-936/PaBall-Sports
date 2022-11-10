@@ -24,35 +24,35 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.quiz.RewardActivity"
+            android:name=".presenter.quiz.RewardActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.quiz.QuizActivity"
+            android:name=".presenter.quiz.QuizActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.search.SearchActivity"
+            android:name=".presenter.search.SearchActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.OnboardingActivity"
+            android:name=".presenter.OnboardingActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.SplashActivity"
+            android:name=".presenter.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,7 +65,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presenter.MainActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

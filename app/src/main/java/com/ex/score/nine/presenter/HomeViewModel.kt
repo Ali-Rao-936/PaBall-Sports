@@ -1,4 +1,4 @@
-package com.ex.score.nine.presentation
+package com.ex.score.nine.presenter
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -10,7 +10,6 @@ import com.ex.score.nine.domain.models.HomeBody
 import com.ex.score.nine.domain.repo.ApiRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject

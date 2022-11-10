@@ -1,12 +1,13 @@
-package com.ex.score.nine.presentation.search
+
+package com.ex.score.nine.presenter.quiz
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.ex.score.nine.R
 
-class SearchActivity : AppCompatActivity() {
+class RewardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        setContentView(R.layout.activity_reward)
     }
 }
