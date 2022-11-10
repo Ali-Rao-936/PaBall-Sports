@@ -10,4 +10,15 @@
     <string name="welcome_text">Thank you for downloading our app! Enjoy all of Quizzy features directly in your hands!</string>
     <string name="next">Next</string>
     <string name="this_is_an_image">this is an image</string>
+    <string name="app_pref_name">pa_ball_sports</string>
+
+    <string name="onboarding_header_1">Welcome to Quizzy!</string>
+    <string name="onboarding_body_1">Thank you for downloading our app! Enjoy all of Quizzy features directly in your hands!</string>
+
+    <string name="onboarding_header_2">Question Fooball</string>
+    <string name="onboarding_body_2">Quizzy is trusted by the teachers worldwide to maintain the student learning progress</string>
+
+    <string name="onboarding_header_3">Get Ready, be a Superstar!</string>
+    <string name="onboarding_body_3">Gather all the poins as much as you can, be a superstar in your class with Quizzy!</string>
+
 </resources>

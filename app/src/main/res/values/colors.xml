@@ -13,4 +13,8 @@
     <color name="grey_dark">#323438</color>
     <color name="grey">#A9A9A9</color>
     <color name="light_black">#323438</color>
+
+    <color name="splash_screen_gradint_1">#14C1FA</color>
+    <color name="splash_screen_gradint_2">#02BCF0</color>
+
 </resources>
