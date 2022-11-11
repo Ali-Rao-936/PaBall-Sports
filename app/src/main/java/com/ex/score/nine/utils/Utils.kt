@@ -42,4 +42,12 @@ object Utils {
         val preference = preferences.data.first()
         emit(preference[dataStoreKey])
     }
+
+    suspend fun setLocale(preferences: DataStore<Preferences>, value : String){
+        addStringValue(preferences, Constants.LOCALE_KEY, value)
+    }
+
+    suspend fun getLocale(preferences: DataStore<Preferences>) : String {
+        return getStringValue(preferences, Constants.LOCALE_KEY).first() ?: Constants.CHINESE
+    }
 }

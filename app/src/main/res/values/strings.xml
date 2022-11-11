@@ -1,13 +1,11 @@
 <resources>
-    <string name="app_name">PaBall Sports Quiz</string>
-    <string name="no_internet_connection_message">No network available, please check your WiFi or Data connection</string>
-    <string name="no_internet_active_message">No internet available, please check your connected WIFi or Data</string>
-
-
-    <string name="interactive_quiz">Interactive Quiz</string>
-    <string name="only_quiz">100% free only at Quizzy</string>
-    <string name="welcome_quiz">Welcome to Quizzy!</string>
-    <string name="welcome_text">Thank you for downloading our app! Enjoy all of Quizzy features directly in your hands!</string>
-    <string name="next">Next</string>
-    <string name="this_is_an_image">this is an image</string>
+    <string name="app_name">霸球体育</string>
+    <string name="no_internet_connection_message">没有可用的网络，请检查您的 WiFi 或数据连接</string>
+    <string name="no_internet_active_message">没有可用的互联网，请检查您连接的 WIFI 或数据</string>
+    <string name="interactive_quiz">互动测验</string>
+    <string name="only_quiz">100% 免费仅在 Quizzy</string>
+    <string name="welcome_quiz">欢迎来到测验！</string>
+    <string name="welcome_text">感谢您下载我们的应用程序！直接在您的手中享受所有 Quizzy 功能！</string>
+    <string name="next">下一个</string>
+    <string name="this_is_an_image" translatable="false">this is an image</string>
 </resources>

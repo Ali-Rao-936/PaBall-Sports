@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PaBall Sports Quiz</string>
+    <string name="no_internet_connection_message">No network available, please check your WiFi or Data connection</string>
+    <string name="no_internet_active_message">No internet available, please check your connected WIFi or Data</string>
+
+
+    <string name="interactive_quiz">Interactive Quiz</string>
+    <string name="only_quiz">100% free only at Quizzy</string>
+    <string name="welcome_quiz">Welcome to Quizzy!</string>
+    <string name="welcome_text">Thank you for downloading our app! Enjoy all of Quizzy features directly in your hands!</string>
+    <string name="next">Next</string>
+</resources>

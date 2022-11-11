@@ -14,4 +14,10 @@ object Constants {
     const val BANNER: String = "banner"
     const val PROMPT_TITLE: String = "prompt_title"
     const val PROMPT_MESSAGE: String = "prompt_message"
+    const val LOCALE_KEY="LOCALE_KEY"
+    const val ENGLISH = "en"
+    const val CHINESE = "cn"
+    const val INDONESIAN = "id"
+    const val VIETNAMESE = "vi"
+    const val THAI = "th"
 }

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.ex.score.nine.BaseActivity
 import com.ex.score.nine.R
 import com.ex.score.nine.domain.models.BaseClassIndexNew
 import com.ex.score.nine.domain.models.Match
@@ -16,15 +17,16 @@ import com.ex.score.nine.domain.models.PlayerBio
 import com.ex.score.nine.domain.models.TeamInfo
 import com.ex.score.nine.domain.models.lineup.Lineup
 import com.ex.score.nine.domain.models.lineup.Players
-import com.ex.score.nine.presentation.quiz.QuizActivity
 import com.ex.score.nine.presentation.quiz.RewardActivity
+import com.ex.score.nine.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModel: HomeViewModel
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     var pageNumber = 1
     var pageCount = 0
 
-    companion object{
+    companion object {
         var matchesList = ArrayList<Match>()
         var suggestionPlayersList = ArrayList<String>()
         var suggestionTeamsList = ArrayList<String>()
@@ -47,9 +49,12 @@ class MainActivity : AppCompatActivity() {
         initObserver()
 
         // for teams
-       viewModel.getMatches("en", "1")
+        lifecycleScope.launch {
+            viewModel.getMatches(Utils.getLocale(preferences), pageNumber.toString())
+
+        }
         // for players
-   //     viewModel.getPlayers()
+        //     viewModel.getPlayers()
 
         findViewById<ImageView>(R.id.ivLogoMain).setOnClickListener {
             startActivity(Intent(this, RewardActivity::class.java))
@@ -145,6 +150,7 @@ class MainActivity : AppCompatActivity() {
                 if (!suggestionPlayersList.contains(awayBackup.playerName))
                     suggestionPlayersList.add(awayBackup.playerName)
             }
+
             for (awayLineUp in data.awayLineup) {
                 // if player have photo
                 if (awayLineUp.playerPhoto.isNotEmpty()) {
@@ -171,38 +177,49 @@ class MainActivity : AppCompatActivity() {
 //            println(suggestionPlayersList)
 
 
-
     }
-
 
 
     private fun handleTeamsData(matchesList: ArrayList<Match>) {
         for (match in matchesList) {
             if (match.homeName.isNotEmpty() && match.leagueName.isNotEmpty() && match.homeLogo.isNotEmpty() && match.location.isNotEmpty()) {
-                teamsList.add(TeamInfo(match.homeName, match.leagueName, match.homeLogo, match.location))
+                teamsList.add(
+                    TeamInfo(
+                        match.homeName,
+                        match.leagueName,
+                        match.homeLogo,
+                        match.location
+                    )
+                )
             }
 
             if (match.homeName.isNotEmpty()) {
                 if (!suggestionTeamsList.contains(match.homeName))
-                suggestionTeamsList.add(match.homeName)
+                    suggestionTeamsList.add(match.homeName)
             }
         }
 
-//        for (team in teamsList){
-//            println(team.homeName)
-//        }
+        if (teamsList.size < 70)
+            loadMoreMatches()
 
-   //     println(suggestionTeamsList)
+        for (team in teamsList){
+            println(team.homeName)
+        }
+
+        //     println(suggestionTeamsList)
 
     }
 
     // pagination
-    fun loadMoreMatches() {
+    private fun loadMoreMatches() {
         if (pageNumber > pageCount)
             return
         else {
             pageNumber += 1
-            viewModel.getMatches("en", pageNumber.toString())
+            lifecycleScope.launch {
+                viewModel.getMatches(Utils.getLocale(preferences), pageNumber.toString())
+
+            }
         }
 
     }
