@@ -32,13 +32,15 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
-            android:name=".presenter.quiz.QuizActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+            android:name=".presenter.QuizActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
+
         </activity>
+
         <activity
             android:name=".presenter.search.SearchActivity"
             android:exported="false">

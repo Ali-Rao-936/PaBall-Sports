@@ -1,5 +1,6 @@
 package com.ex.score.nine
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ex.score.nine.data.ListResponse.mapArrayList
 import com.ex.score.nine.domain.models.Scores
+import com.ex.score.nine.presenter.QuizActivity
+import com.ex.score.nine.presenter.SplashScreen
 import com.ex.score.nine.presenter.adapters.AdapterTopScore
 import com.ex.score.nine.sharedPreferences.Functions.fillSoccer
 import com.ex.score.nine.sharedPreferences.TeamsOrPlayers.getTeamsOrPlayersInSP
@@ -58,11 +61,9 @@ open class BaseActivity : AppCompatActivity() {
         {
             teams_radio.visibility= View.VISIBLE
             teams_or_players = "teams"
-            Log.i("TAG","teams_or_players: "+teams_or_players)
         }else{
             players_radio.visibility= View.VISIBLE
             teams_or_players = "players"
-            Log.i("TAG","teams_or_players: "+teams_or_players)
         }
 
 
@@ -121,6 +122,8 @@ open class BaseActivity : AppCompatActivity() {
            }else{
 
            }
+            startActivity(Intent(this@BaseActivity, QuizActivity::class.java))
+
 
         })
 
