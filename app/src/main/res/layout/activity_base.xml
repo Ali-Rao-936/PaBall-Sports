@@ -191,6 +191,7 @@
                         android:hint="@string/search"
                         android:textCursorDrawable="@drawable/c"
                         android:textSize="17dp"
+                        android:textColor="@color/black"
                         android:textColorHint="@color/grey"
                         tools:ignore="TouchTargetSizeCheck" />
 

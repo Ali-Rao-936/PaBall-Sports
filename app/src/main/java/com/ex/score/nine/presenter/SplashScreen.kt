@@ -44,7 +44,7 @@ class SplashScreen : AppCompatActivity() {
            applicationContext.createConfigurationContext(config)
         resources.updateConfiguration(config, resources.displayMetrics)
 
-        setContentView(R.layout.activity_splash)
+        setContentView(R.layout.quiz_activity)
 
 //        val exo_tv=findViewById<TextView>(R.id.exo_score)
         Handler().postDelayed({

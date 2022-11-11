@@ -14,13 +14,13 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
-class SplashActivity : BaseActivity() {
+class QuizActivity : BaseActivity() {
 
     var loginStatus: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
+        setContentView(R.layout.quiz_activity)
 
         goToNext()
     }
@@ -30,9 +30,9 @@ class SplashActivity : BaseActivity() {
             loginStatus = Utils.getBooleanValue(preferences, Constants.IS_FIRST_TIME).first() ?: true
 
            val intent = if (loginStatus) {
-                 Intent(this@SplashActivity, OnboardingActivity::class.java)
+                 Intent(this@QuizActivity, OnboardingActivity::class.java)
             }else{
-               Intent(this@SplashActivity, MainActivity::class.java)
+               Intent(this@QuizActivity, MainActivity::class.java)
             }
             startActivity(intent)
             finish()
