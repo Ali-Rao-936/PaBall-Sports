@@ -24,4 +24,11 @@
     <string name="players">Players</string>
     <string name="teams">Teams</string>
 
+    <string name="search">Search highest score</string>
+    <string name="list_leaderboard">List Leaderboard</string>
+
+    <string name="points">Points</string>
+    <string name="play_game">Play Game</string>
+
+
 </resources>
