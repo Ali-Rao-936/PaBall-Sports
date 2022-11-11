@@ -36,7 +36,7 @@
         <activity
             android:name=".presenter.QuizActivity"
             android:exported="false"
-            android:theme="@style/AppTheme"
+            android:theme="@style/QuiTheme"
             android:screenOrientation="portrait">
 
         </activity>

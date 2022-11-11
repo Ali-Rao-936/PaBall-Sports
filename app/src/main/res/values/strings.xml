@@ -29,6 +29,17 @@
 
     <string name="points">Points</string>
     <string name="play_game">Play Game</string>
+    <string name="question_number">Question number</string>
+    <string name="goal">Goal</string>
+    <string name="top_score">Top score</string>
+    <string name="league">League</string>
+    <string name="team">Team</string>
+    <string name="qp">QP</string>
+    <string name="guess_the_player">Guess the player?</string>
+    <string name="guess_the_team">Guess the team?</string>
+    <string name="q">Q :</string>
+
+    <string name="current_location">Current location</string>
 
 
 </resources>

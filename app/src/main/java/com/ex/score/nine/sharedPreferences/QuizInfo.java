@@ -19,6 +19,7 @@ public class QuizInfo {
         Editor.putString("correct_answer",text);
 
         Editor.commit();
+
     }
 
 
@@ -30,7 +31,7 @@ public class QuizInfo {
         text = (shared.getString("correct_answer", ""));
         if (text == null || text.isEmpty())
         {
-            text = "0";
+            text = "1";
         }
         return text;
     }

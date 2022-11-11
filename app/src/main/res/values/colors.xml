@@ -21,5 +21,8 @@
     <color name="splash_screen_gradint_2">#02BCF0</color>
     <color name="yallow">#FFB72B</color>
     <color name="red">#FF0000</color>
+    <color name="details_cover_color">#E6F7FF</color>
+    <color name="details_text_color">#4AAAF8</color>
+
 
 </resources>
