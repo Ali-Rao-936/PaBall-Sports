@@ -8,4 +8,36 @@
     <string name="welcome_text">感谢您下载我们的应用程序！直接在您的手中享受所有 Quizzy 功能！</string>
     <string name="next">下一个</string>
     <string name="this_is_an_image" translatable="false">this is an image</string>
+    <string name="points" >Points</string>
+    <string name="teams">Teams</string>
+    <string name="players">Players</string>
+    <string name="play_game">Play Game</string>
+    <string name="list_leaderboard">List Leaderboard</string>
+    <string name="search">Search highest score</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="view_leaderboard">View Leaderboard</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="question_number">Question number</string>
+    <string name="goal">Goal</string>
+    <string name="top_score">Top score</string>
+    <string name="league">League</string>
+    <string name="team">Team</string>
+    <string name="qp">QP</string>
+    <string name="guess_the_player">Guess the player?</string>
+    <string name="guess_the_team">Guess the team?</string>
+    <string name="q">Q :</string>
+    <string name="current_location">Current location</string>
+    <string name="onboarding_header_1">Welcome to Quizzy!</string>
+    <string name="onboarding_body_1">Thank you for downloading our app! Enjoy all of Quizzy features directly in your hands!</string>
+
+    <string name="onboarding_header_2">Question Fooball</string>
+    <string name="onboarding_body_2">Quizzy is trusted by the teachers worldwide to maintain the student learning progress</string>
+
+    <string name="onboarding_header_3">Get Ready, be a Superstar!</string>
+    <string name="onboarding_body_3">Gather all the poins as much as you can, be a superstar in your class with Quizzy!</string>
+    <string name="app_pref_name">pa_ball_sports</string>
+
+
+
 </resources>

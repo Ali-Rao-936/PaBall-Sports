@@ -25,8 +25,8 @@ class RewardActivity : BaseActivity() {
     lateinit var teamsQuestionsList: ArrayList<Match>
     private var currentIndex = 0
     private lateinit var correctAnswer: String
-    lateinit var savedQuestionsList: ArrayList<String>
     lateinit var teamAnswersList: ArrayList<String>
+     private var savedQuestionsList = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

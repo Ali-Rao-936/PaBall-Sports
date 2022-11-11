@@ -13,4 +13,15 @@
     <color name="grey_dark">#323438</color>
     <color name="grey">#A9A9A9</color>
     <color name="light_black">#323438</color>
+    <color name="black_1">#f3f6f4</color>
+
+    <color name="splash_screen_gradint_1">#14C1FA</color>
+    <color name="reward_screen_button">#1A14C1FA</color>
+    <color name="splash_screen_gradint_2">#02BCF0</color>
+    <color name="yallow">#FFB72B</color>
+    <color name="red">#FF0000</color>
+    <color name="details_cover_color">#E6F7FF</color>
+    <color name="details_text_color">#4AAAF8</color>
+
+
 </resources>
