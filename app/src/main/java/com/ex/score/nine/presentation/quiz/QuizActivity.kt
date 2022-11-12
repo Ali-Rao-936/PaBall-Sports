@@ -7,22 +7,22 @@ import com.ex.score.nine.BaseActivity
 import com.ex.score.nine.R
 import com.ex.score.nine.domain.models.PlayerBio
 import com.ex.score.nine.presentation.fragments.quiz_fragments.FragmentQuestion
-import com.ex.score.nine.utils.Utils.generateAnswers
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class QuizActivity : BaseActivity() {
 
-    var questionCont: RelativeLayout?=null
+    var questionCont: RelativeLayout? = null
     val gson = Gson()
     private lateinit var suggestionsList: ArrayList<String>
     lateinit var showPlayersList: ArrayList<PlayerBio>
     private var answersList = ArrayList<String>()
     private var currentIndex = 0
     private lateinit var correctAnswer: String
-     private var savedQuestionsList = ArrayList<String>()
+    private var savedQuestionsList = ArrayList<String>()
+
+    lateinit var fragmentQuestion: FragmentQuestion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +55,7 @@ class QuizActivity : BaseActivity() {
 //            shuffle(answersList)
 //            println(answersList)
 
-            // when user answer is correct
+        // when user answer is correct
 //            val newPhotoUrl = showPlayersList[currentIndex].photoUrl
 //            // save the question
 //            savedQuestionsList.add(newPhotoUrl)
@@ -74,28 +74,29 @@ class QuizActivity : BaseActivity() {
 //            answersList.add(correctAnswer)
 //            shuffle(answersList)
 
-   //     }
+        //     }
         statusBarColor()
         cast()
         handleQuestionFragment()
     }
 
     private fun handleQuestionFragment() {
-        val fragmentQuestion= FragmentQuestion.newInstance("","")
+        fragmentQuestion = FragmentQuestion.newInstance("", "")
         supportFragmentManager.beginTransaction()
             .replace(R.id.container_question_fragment, fragmentQuestion)
             .commit()
     }
+
     private fun cast() {
-        questionCont=findViewById<RelativeLayout>(R.id.question_cont)
+        questionCont = findViewById<RelativeLayout>(R.id.question_cont)
     }
 
 
-    private  fun makeQuestionFragmentVISIBLE() {
-        questionCont?.visibility= View.VISIBLE
+    private fun makeQuestionFragmentVISIBLE() {
+        questionCont?.visibility = View.VISIBLE
     }
 
-    private  fun makeQuestionFragmentGONE() {
+    private fun makeQuestionFragmentGONE() {
         questionCont?.setVisibility(View.GONE)
     }
 

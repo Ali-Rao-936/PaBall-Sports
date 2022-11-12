@@ -143,7 +143,7 @@ class SplashScreen : BaseActivity() {
             // we have 4 kinds of list in response each list contains player info
             for (homeBackup in data.homeBackup) {
                 // if player have photo
-                if (homeBackup.playerPhoto.isNotEmpty()) {
+                if (homeBackup.playerPhoto.isNotEmpty() && homeBackup.playerName.isNotEmpty() && homeBackup.playerHeight.isNotEmpty() && homeBackup.playerCountry.isNotEmpty()) {
                     playersList.add(
                         PlayerBio(
                             homeBackup.playerName,
@@ -160,7 +160,7 @@ class SplashScreen : BaseActivity() {
 
             for (homeLineUp in data.homeLineup) {
                 // if player have photo
-                if (homeLineUp.playerPhoto.isNotEmpty()) {
+                if (homeLineUp.playerPhoto.isNotEmpty() && homeLineUp.playerName.isNotEmpty() && homeLineUp.playerHeight.isNotEmpty() && homeLineUp.playerCountry.isNotEmpty()) {
                     playersList.add(
                         PlayerBio(
                             homeLineUp.playerName,
@@ -177,7 +177,7 @@ class SplashScreen : BaseActivity() {
 
             for (awayBackup in data.awayBackup) {
                 // if player have photo
-                if (awayBackup.playerPhoto.isNotEmpty()) {
+                if (awayBackup.playerPhoto.isNotEmpty() && awayBackup.playerName.isNotEmpty() && awayBackup.playerHeight.isNotEmpty() && awayBackup.playerCountry.isNotEmpty()) {
                     playersList.add(
                         PlayerBio(
                             awayBackup.playerName,
@@ -194,7 +194,7 @@ class SplashScreen : BaseActivity() {
 
             for (awayLineUp in data.awayLineup) {
                 // if player have photo
-                if (awayLineUp.playerPhoto.isNotEmpty()) {
+                if (awayLineUp.playerPhoto.isNotEmpty() && awayLineUp.playerName.isNotEmpty() && awayLineUp.playerHeight.isNotEmpty() && awayLineUp.playerCountry.isNotEmpty()) {
                     playersList.add(
                         PlayerBio(
                             awayLineUp.playerName,

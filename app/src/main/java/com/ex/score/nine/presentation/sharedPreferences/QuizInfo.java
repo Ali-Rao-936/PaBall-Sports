@@ -36,6 +36,18 @@ public class QuizInfo {
         return text;
     }
 
+    public static void increCorrectAnswerFromSP(Context context) {
+        String text=getCorrectAnswerFromSP(context);
+        int i = Integer.parseInt(text);
+        i=i+1;
+        saveNumberOfCorrectAnswerInSP(context,String.valueOf(i));
+
+    }
+
+    public static void resetACountCorrectAnswerFromSP(Context context) {
+        saveNumberOfCorrectAnswerInSP(context,"1");
+
+    }
 
 
 }

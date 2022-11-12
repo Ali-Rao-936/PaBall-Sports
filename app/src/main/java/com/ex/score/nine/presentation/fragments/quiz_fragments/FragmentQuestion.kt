@@ -1,53 +1,59 @@
 package com.ex.score.nine.presentation.fragments.quiz_fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.replace
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ex.score.nine.R
-import com.ex.score.nine.domain.models.AnswersModel
-import com.ex.score.nine.domain.models.PlayerBio
-import com.ex.score.nine.domain.models.TeamInfo
+import com.ex.score.nine.domain.models.*
 import com.ex.score.nine.presentation.SplashScreen.Companion.playersList
 import com.ex.score.nine.presentation.SplashScreen.Companion.suggestionPlayersList
 import com.ex.score.nine.presentation.SplashScreen.Companion.suggestionTeamsList
 import com.ex.score.nine.presentation.SplashScreen.Companion.teamsList
-import com.ex.score.nine.domain.models.*
-import com.ex.score.nine.presentation.MainActivity
 import com.ex.score.nine.presentation.adapters.AdapterAnswar
-import com.ex.score.nine.presentation.adapters.AdapterTopScore
+import com.ex.score.nine.presentation.adapters.AdapterAnswar.PassTheAnswer
+import com.ex.score.nine.presentation.adapters.AdapterAnswarWithoutListener
+import com.ex.score.nine.presentation.fragments.reward_fragments.RewardFragment
 import com.ex.score.nine.presentation.quiz.QuizActivity
 import com.ex.score.nine.presentation.sharedPreferences.Functions
 import com.ex.score.nine.presentation.sharedPreferences.QuizInfo.getCorrectAnswerFromSP
+import com.ex.score.nine.presentation.sharedPreferences.QuizInfo.increCorrectAnswerFromSP
 import com.ex.score.nine.presentation.sharedPreferences.TeamsOrPlayers
 import com.ex.score.nine.utils.Constants
 import com.ex.score.nine.utils.Utils
+import com.ex.score.nine.utils.Utils.generateAnswersList
+import com.ex.score.nine.utils.Utils.getPlayerIndex
+import com.ex.score.nine.utils.Utils.getTeamIndex
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.lang.reflect.Type
+import java.util.*
 import java.util.Collections.shuffle
 import javax.inject.Inject
-import kotlin.random.Random
+import kotlin.concurrent.schedule
 
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 @AndroidEntryPoint
-class FragmentQuestion : Fragment() {
+class FragmentQuestion : Fragment(), PassTheAnswer {
 
     @Inject
     lateinit var preference: DataStore<Preferences>
@@ -55,7 +61,7 @@ class FragmentQuestion : Fragment() {
     private var postID: String? = null
     private var param2: String? = null
 
-    var first_details_text: TextView? = null
+    private var first_details_text: TextView? = null
     var back_rl: RelativeLayout? = null
     var question_number: TextView? = null
     var qp_number_tv: TextView? = null
@@ -70,6 +76,8 @@ class FragmentQuestion : Fragment() {
     var image_view: ImageView? = null
     var recycler_view_answers: RecyclerView? = null
 
+    lateinit var questionText : TextView
+
     val gson = Gson()
     private lateinit var suggestionsTeamNamesList: ArrayList<String>
     lateinit var teamsQuestionsList: ArrayList<TeamInfo>
@@ -83,6 +91,7 @@ class FragmentQuestion : Fragment() {
     lateinit var playerBio: PlayerBio
 
     var adapterAnswar: AdapterAnswar? = null
+    var adapterAnswarWithoutListener: AdapterAnswarWithoutListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,20 +127,11 @@ class FragmentQuestion : Fragment() {
             if (json != "no data") {
                 // below line is to get the type of our array list.
                 val type: Type = object : TypeToken<java.util.ArrayList<String?>?>() {}.type
-                savedQuestionsList = gson.fromJson<Any>(json, type) as java.util.ArrayList<String>
-
+                savedQuestionsList = gson.fromJson<Any>(json, type) as ArrayList<String>
+                println(savedQuestionsList)
             } else
                 currentIndex = 0
 
-            correctAnswer = teamsQuestionsList[currentIndex].homeName
-            teamInfo = TeamInfo(teamsQuestionsList[currentIndex].homeName,teamsQuestionsList[currentIndex].leagueName, teamsQuestionsList[currentIndex].homeLogo,teamsQuestionsList[currentIndex].location)
-            //generate random answers
-            teamAnswersList = generateAnswersList(correctAnswer, suggestionsTeamNamesList)
-            teamAnswersList.add(AnswersModel(true, correctAnswer))
-
-            println(teamAnswersList)
-            shuffle(teamAnswersList)
-            println(teamAnswersList)
 
             cast(view)
             actionListenerToBack()
@@ -143,20 +143,22 @@ class FragmentQuestion : Fragment() {
                         || TeamsOrPlayers.getTeamsOrPlayersInSP(activity?.applicationContext)
                     .equals("teams"))
             ) {
-                currentIndex = Utils.getTeamIndex(teamsQuestionsList, savedQuestionsList)
+                questionText.text = getString(R.string.guess_the_team)
+                currentIndex = getTeamIndex(teamsQuestionsList, savedQuestionsList)
                 correctAnswer = teamsQuestionsList[currentIndex].homeName
                 teamInfo = teamsQuestionsList[currentIndex]
                 //generate random answers
-                answersList = Utils.generateAnswersList(correctAnswer, suggestionsTeamNamesList)
+                answersList = generateAnswersList(correctAnswer, suggestionsTeamNamesList)
                 answersList.add(AnswersModel(true, correctAnswer))
                 setTeamDetails(teamInfo)
             } else {
                 //for players
-                currentIndex = Utils.getPlayerIndex(showPlayersList, savedQuestionsList)
+                questionText.text = getString(R.string.guess_the_player)
+                currentIndex = getPlayerIndex(showPlayersList, savedQuestionsList)
                 correctAnswer = showPlayersList[currentIndex].name
                 playerBio = showPlayersList[currentIndex]
                 //generate random answers
-                answersList = Utils.generateAnswersList(correctAnswer, suggestionPlayersList)
+                answersList = generateAnswersList(correctAnswer, suggestionPlayersList)
                 answersList.add(AnswersModel(true, correctAnswer))
                 setPlayerDetails(playerBio)
             }
@@ -166,52 +168,9 @@ class FragmentQuestion : Fragment() {
             shuffle(answersList)
             println(answersList)
 
-            createAnswerRV()
+            if (answersList.isNotEmpty())
+            createAnswerRV(answersList)
 
-            // when user answer is correct
-            if (TeamsOrPlayers.getTeamsOrPlayersInSP(activity?.applicationContext).isNotEmpty()
-                &&
-                (TeamsOrPlayers.getTeamsOrPlayersInSP(activity?.applicationContext).equals("empty")
-                        || TeamsOrPlayers.getTeamsOrPlayersInSP(activity?.applicationContext)
-                    .equals("teams"))
-            ) {
-//            val newPhotoUrl = teamsQuestionsList[currentIndex].homeLogo
-//            //   save the question
-//            savedQuestionsList.add(newPhotoUrl)
-//            Utils.addStringValue(
-//                preferences,
-//                Constants.SAVED_QUESTIONS,
-//                gson.toJson(savedQuestionsList)
-//            )
-//            //  remove from current questions list
-//            teamsQuestionsList.removeAt(currentIndex)
-//            currentIndex = getIndex(teamsQuestionsList, savedQuestionsList)
-//            answersList.clear()
-//            //    correctAnswer = teamsQuestionsList[currentIndex].homeName
-//            answersList = generateAnswersList(correctAnswer, suggestionTeamsList)
-//            answersList.add(correctAnswer)
-//            shuffle(answersList)
-            } else {
-                // when user answer is correct
-//            val newPhotoUrl = showPlayersList[currentIndex].photoUrl
-//            // save the question
-//            savedQuestionsList.add(newPhotoUrl)
-//
-//            Utils.addStringValue(
-//                preferences,
-//                Constants.SAVED_QUESTIONS,
-//                gson.toJson(savedQuestionsList)
-//            )
-//            // remove from current questions list
-//            showPlayersList.removeAt(currentIndex)
-//            currentIndex = getIndex(playersList, savedQuestionsList)
-//            answersList.clear()
-//            correctAnswer = showPlayersList[currentIndex].name
-//            answersList = generateAnswersList(correctAnswer, suggestionsList)
-//            answersList.add(correctAnswer)
-//            shuffle(answersList)
-
-            }
 //            teamAnswersList = generateAnswersList(correctAnswer, suggestionTeamsList)
 //            teamAnswersList.add(correctAnswer)
 //            shuffle(teamAnswersList)
@@ -219,78 +178,46 @@ class FragmentQuestion : Fragment() {
         }
 
     }
-    var answersArrayList = java.util.ArrayList<AnswersModelT>()
 
-    private fun createAnswerRV() {
-        answersArrayList = Functions.fillTestAnswer(activity?.applicationContext)
+    var answersArrayList = ArrayList<AnswersModelT>()
+
+    private fun createAnswerRV(answersList: ArrayList<AnswersModel>) {
+        //  answersArrayList = Functions.fillTestAnswer(activity?.applicationContext)
+        answersArrayList.clear()
+        answersArrayList.add(
+            AnswersModelT(
+                answersList[0].correctOrNo,
+                answersList[0].answer,
+                context!!.resources.getString(R.string.a)
+            )
+        )
+        answersArrayList.add(
+            AnswersModelT(
+                answersList[1].correctOrNo,
+                answersList[1].answer,
+                context!!.resources.getString(R.string.b)
+            )
+        )
+        answersArrayList.add(
+            AnswersModelT(
+                answersList[2].correctOrNo,
+                answersList[2].answer,
+                context!!.resources.getString(R.string.c)
+            )
+        )
+        answersArrayList.add(
+            AnswersModelT(
+                answersList[3].correctOrNo,
+                answersList[3].answer,
+                context!!.resources.getString(R.string.d)
+            )
+        )
 
         recycler_view_answers?.setHasFixedSize(true)
         val mLayoutManager = GridLayoutManager(activity?.applicationContext, 1)
-        recycler_view_answers?.setLayoutManager(mLayoutManager)
-        adapterAnswar = AdapterAnswar(activity?.applicationContext, answersArrayList)
-        recycler_view_answers?.setAdapter(adapterAnswar)
-    }
-
-    private fun getIndex(teamsList: ArrayList<Match>, questionsList: ArrayList<String>): Int {
-        val index = 0
-        for (i in 0..teamsList.size) {
-            if (!questionsList.contains(teamsList[i].homeLogo)) {
-                return i
-            }
-        }
-        return index
-    }
-
-    private fun generateAnswersList(correctAnswer: String, suggestionsList: ArrayList<String>): ArrayList<AnswersModel> {
-        val list = ArrayList<AnswersModel>()
-        for (i in 0..2) {
-            val randomName = generateAnswers(correctAnswer, suggestionsList, list)
-            list.add(AnswersModel(false, randomName))
-        }
-        return list
-    }
-
-    private fun generateAnswers(
-        name: String,
-        suggestionList: ArrayList<String>,
-        answersList: ArrayList<AnswersModel>
-    ): String {
-
-
-        val randomIndex = Random.nextInt(suggestionList.size)
-        val randomElement = suggestionList[randomIndex]
-        println(randomIndex)
-        return if (randomElement != name) {
-            randomElement
-//            if (!answersList.contains(randomElement))
-//                randomElement
-//            else {
-//                generateAnswers(name, suggestionList, answersList)
-//            }
-
-//            for (answer in answersList){
-//                if (answer == randomElement){
-//                    generateAnswers(name, suggestionList, answersList)
-//                }
-//            }
-
-        } else {
-            generateAnswers(name, suggestionList, answersList)
-        }
-
-    }
-
-    private fun shuffle(list: MutableList<AnswersModel>) {
-        // start from the end of the list
-        for (i in list.size - 1 downTo 1) {
-            // get a random index `j` such that `0 <= j <= i`
-            val j = Random.nextInt(i + 1)
-
-            // swap element at i'th position in the list with the element at j'th position
-            val temp = list[i]
-            list[i] = list[j]
-            list[j] = temp
-        }
+        recycler_view_answers?.layoutManager = mLayoutManager
+        adapterAnswar = AdapterAnswar(activity?.applicationContext, answersArrayList, this)
+        recycler_view_answers?.adapter = adapterAnswar
     }
 
     private fun fillImage(url: String) {
@@ -336,11 +263,12 @@ class FragmentQuestion : Fragment() {
     }
 
     private fun setPlayerDetails(player: PlayerBio) {
-        first_details_text?.setText(activity?.resources?.getString(R.string.goal))
-        first_details_info?.setText(player.country)
+        first_details_text?.text = activity?.resources?.getString(R.string.current_location)
+        first_details_info?.text = player.country
 
-        sec_details_text?.setText(activity?.resources?.getString(R.string.top_score))
-        sec_details_info?.setText(player.height)
+        thr_details_text?.text = activity?.resources?.getString(R.string.height)
+        thr_details_info?.text = player.height + " cm"
+        println(" player height   "+player.height)
 
         fillImage(player.photoUrl)
 
@@ -352,7 +280,7 @@ class FragmentQuestion : Fragment() {
     }
 
     private fun cast(view: View) {
-        back_rl = view.findViewById<RelativeLayout>(R.id.back_rl)
+        back_rl = view.findViewById(R.id.back_rl)
         question_number = view.findViewById(R.id.question_number_tv)
         qp_number_tv = view.findViewById(R.id.qp_number_tv)
 
@@ -365,8 +293,9 @@ class FragmentQuestion : Fragment() {
         fou_details_text = view.findViewById(R.id.fou_details_text)
         fou_details_info = view.findViewById(R.id.fou_details_info)
         question_number_tv = view.findViewById(R.id.question_number_tv)
-        image_view = view.findViewById<ImageView>(R.id.image_view)
-        recycler_view_answers = view.findViewById<RecyclerView>(R.id.recycler_view_answers)
+        image_view = view.findViewById(R.id.image_view)
+        recycler_view_answers = view.findViewById(R.id.recycler_view_answers)
+        questionText = view.findViewById(R.id.txtQuestion)
 
     }
 
@@ -381,5 +310,144 @@ class FragmentQuestion : Fragment() {
             }
     }
 
+    override fun onClick(answer: Boolean,answer_model:AnswersModelT) {
 
+
+        if (answer)
+            doForCorrectAnswer()
+        else {
+            createAnswerWithoutListener(answer_model)
+            Toast.makeText(context, "Wrong Answer", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    var answersWithoutListenerArrayList = ArrayList<AnswersModelIncorrect>()
+
+    private fun createAnswerWithoutListener(answer_model:AnswersModelT) {
+        //answersArrayList
+        answersWithoutListenerArrayList.clear()
+        answersWithoutListenerArrayList.add(
+            AnswersModelIncorrect(
+                answersList[0].correctOrNo,
+                1,
+                answersList[0].answer,
+                context!!.resources.getString(R.string.a)
+            )
+        )
+        answersWithoutListenerArrayList.add(
+            AnswersModelIncorrect(
+                answersList[1].correctOrNo,
+                1,
+                answersList[1].answer,
+                context!!.resources.getString(R.string.b)
+            )
+        )
+        answersWithoutListenerArrayList.add(
+            AnswersModelIncorrect(
+                answersList[2].correctOrNo,
+                1,
+                answersList[2].answer,
+                context!!.resources.getString(R.string.c)
+            )
+        )
+        answersWithoutListenerArrayList.add(
+            AnswersModelIncorrect(
+                answersList[3].correctOrNo,
+                1,
+                answersList[3].answer,
+                context!!.resources.getString(R.string.d)
+            )
+        )
+
+
+
+        for (i in answersWithoutListenerArrayList)
+        {
+            if (i.answer == answer_model.answer)
+            {
+                //user choose then shod to set case number 2
+                i.check = 2
+            }
+
+            if (i.correctOrNo)
+            {
+                //user choose then shod to set case number 3
+                i.check = 3
+
+            }
+        }
+        recycler_view_answers?.setHasFixedSize(true)
+        val mLayoutManager = GridLayoutManager(activity?.applicationContext, 1)
+        recycler_view_answers?.layoutManager = mLayoutManager
+        adapterAnswarWithoutListener = AdapterAnswarWithoutListener(activity?.applicationContext, answersWithoutListenerArrayList)
+        recycler_view_answers?.adapter = adapterAnswarWithoutListener
+
+        Timer("delayedxTime", true).schedule(2000) {
+            val frag = RewardFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.container_question_fragment, frag)
+                .commit()
+        }
+    }
+
+    private fun doForCorrectAnswer() {
+        // when user answer is correct
+
+        Timer("delayTime", true).schedule(2000) {
+
+            lifecycleScope.launch {
+                if (TeamsOrPlayers.getTeamsOrPlayersInSP(activity?.applicationContext).isNotEmpty()
+                    &&
+                    (TeamsOrPlayers.getTeamsOrPlayersInSP(activity?.applicationContext)
+                        .equals("empty")
+                            || TeamsOrPlayers.getTeamsOrPlayersInSP(activity?.applicationContext)
+                        .equals("teams"))
+                ) {
+                    val newPhotoUrl = teamsQuestionsList[currentIndex].photoUrl
+                    //   save the question
+                    savedQuestionsList.add(newPhotoUrl)
+                    Utils.addStringValue(
+                        preference,
+                        Constants.SAVED_QUESTIONS,
+                        gson.toJson(savedQuestionsList)
+                    )
+                    //  remove from current questions list
+                    teamsQuestionsList.removeAt(currentIndex)
+                    currentIndex = getTeamIndex(teamsQuestionsList, savedQuestionsList)
+                    answersList.clear()
+                    correctAnswer = teamsQuestionsList[currentIndex].homeName
+                    answersList = generateAnswersList(correctAnswer, suggestionTeamsList)
+                    answersList.add(AnswersModel(true, correctAnswer))
+                    shuffle(answersList)
+                    setTeamDetails(teamsQuestionsList[currentIndex])
+                    createAnswerRV(answersList)
+                } else {
+                    Log.d("Qoo", " in players after correct")
+                    val newPhotoUrl = showPlayersList[currentIndex].photoUrl
+                    // save the question
+                    savedQuestionsList.add(newPhotoUrl)
+
+                    Utils.addStringValue(
+                        preference,
+                        Constants.SAVED_QUESTIONS,
+                        gson.toJson(savedQuestionsList)
+                    )
+                    // remove from current questions list
+                    showPlayersList.removeAt(currentIndex)
+                    currentIndex = getPlayerIndex(playersList, savedQuestionsList)
+                    answersList.clear()
+                    correctAnswer = showPlayersList[currentIndex].name
+                    answersList = generateAnswersList(correctAnswer, suggestionsList)
+                    answersList.add(AnswersModel(true, correctAnswer))
+                    shuffle(answersList)
+                    println(answersList)
+                    setPlayerDetails(showPlayersList[currentIndex])
+                    increCorrectAnswerFromSP(context)
+                    // increase question nuber
+                    setNumberOfPointsCollect()
+                    createAnswerRV(answersList)
+                }
+            }
+        }
+    }
 }

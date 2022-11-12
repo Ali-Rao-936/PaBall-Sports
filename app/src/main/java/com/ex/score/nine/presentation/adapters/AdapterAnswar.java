@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,11 +23,13 @@ public class AdapterAnswar extends RecyclerView.Adapter<AdapterAnswar.ViewHolder
 
     private final Context context;
     ArrayList<AnswersModelT> answerArrayList;
+    PassTheAnswer passTheAnswer;
 
     public AdapterAnswar
-            (Context context, ArrayList<AnswersModelT> scoresArrayList) {
+            (Context context, ArrayList<AnswersModelT> scoresArrayList,PassTheAnswer passTheAnswer) {
         this.context = context;
         this.answerArrayList = scoresArrayList;
+        this.passTheAnswer = passTheAnswer;
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -36,7 +39,7 @@ public class AdapterAnswar extends RecyclerView.Adapter<AdapterAnswar.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         fillText(holder, position);
         actionListenerToAnswar(holder,position,context);
     }
@@ -45,20 +48,18 @@ public class AdapterAnswar extends RecyclerView.Adapter<AdapterAnswar.ViewHolder
         holder.answer_cont_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (answerArrayList.get(position).getCorrectOrNo()==true)
+                if (answerArrayList.get(position).getCorrectOrNo())
                 {
+                    passTheAnswer.onClick(true,answerArrayList.get(position));
                     holder.answer_cont_rl.setBackground(ContextCompat.getDrawable(context, R.drawable.correct_answar_bg));
                     holder.choose_con_rl.setBackground(ContextCompat.getDrawable(context, R.drawable.circl_bg_solid));
                     holder.choose_tv.setTextColor(context.getResources().getColor(R.color.splash_screen_gradint_1));
-                    holder.answer_tv.setTextColor(context.getResources().getColor(R.color.white));
 
                 }else{
-
+                    passTheAnswer.onClick(false,answerArrayList.get(position));
                     holder.answer_cont_rl.setBackground(ContextCompat.getDrawable(context, R.drawable.incorrect_answar_bg));
                     holder.choose_con_rl.setBackground(ContextCompat.getDrawable(context, R.drawable.circl_bg_solid));
                     holder.choose_tv.setTextColor(context.getResources().getColor(R.color.splash_screen_gradint_1));
-                    holder.answer_tv.setTextColor(context.getResources().getColor(R.color.white));
-
 //                    for (int i=0;i<answerArrayList.size();i++)
 //                    {
 //                        Log.i("TAG","answerArrayList.get(position).getCorrectOrNo(): "+answerArrayList.get(i).getCorrectOrNo());
@@ -74,10 +75,17 @@ public class AdapterAnswar extends RecyclerView.Adapter<AdapterAnswar.ViewHolder
 //                        }
 //                    }
                 }
+                holder.choose_con_rl.setBackground(ContextCompat.getDrawable(context, R.drawable.circl_bg_solid));
+                holder.choose_tv.setTextColor(context.getResources().getColor(R.color.splash_screen_gradint_1));
+                holder.answer_tv.setTextColor(context.getResources().getColor(R.color.white));
             }
         });
     }
 
+    public interface PassTheAnswer{
+        //ArrayList<AnswersModelT> answerArrayList;
+        void onClick(Boolean answer,AnswersModelT answersModelT);
+    }
 
     private void fillText(ViewHolder holder, int position) {
         holder.choose_tv.setText(answerArrayList.get(position).getChara());

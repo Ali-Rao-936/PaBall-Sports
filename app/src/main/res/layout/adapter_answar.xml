@@ -3,26 +3,23 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/_5sdp"
-    android:layout_marginBottom="@dimen/_5sdp"
-    >
+    android:layout_marginBottom="@dimen/_5sdp">
 
     <RelativeLayout
+        android:id="@+id/soccer_cover_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/soccer_cover_rl"
-        android:layout_marginBottom="1dp"
-        >
+        android:layout_marginBottom="1dp">
 
-<!--        android:background="?android:attr/selectableItemBackground"-->
+        <!--        android:background="?android:attr/selectableItemBackground"-->
 
 
         <RelativeLayout
+            android:id="@+id/answer_cont_rl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/answer_cont_rl"
-            android:padding="@dimen/_8sdp"
             android:background="@drawable/search_bg"
-            >
+            android:padding="@dimen/_8sdp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -30,21 +27,21 @@
                 android:orientation="horizontal">
 
                 <RelativeLayout
+                    android:id="@+id/choose_con_rl"
                     android:layout_width="@dimen/_25sdp"
                     android:layout_height="@dimen/_25sdp"
-                    android:id="@+id/choose_con_rl"
                     android:background="@drawable/normal_bg_solid">
 
                     <TextView
+                        android:id="@+id/choose_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:id="@+id/choose_tv"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:textSize="16dp"
+                        android:fontFamily="@font/sans_bold"
                         android:text="A"
-                        />
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
 
 
                 </RelativeLayout>
@@ -57,13 +54,12 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="5dp"
                     android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/sans_bold"
                     android:text="Name"
                     android:textColor="@color/black"
-                    android:textSize="16dp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
-
 
 
             <TextView
@@ -75,13 +71,12 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="5dp"
                 android:text="4500"
-                android:visibility="gone"
                 android:textColor="@color/yallow"
                 android:textSize="16dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
         </RelativeLayout>
-
 
 
     </RelativeLayout>

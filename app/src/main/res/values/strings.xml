@@ -19,8 +19,12 @@
     <string name="view_leaderboard">View Leaderboard</string>
     <string name="back_to_home">Back to Home</string>
     <string name="question_number">Question number</string>
+    <string name="you_got">You got</string>
+    <string name="you_are_on"> points and you are on the good place on this quiz leaderboard, keep it up.</string>
     <string name="goal">Goal</string>
     <string name="top_score">Top score</string>
+    <string name="height">Player Height</string>
+    <string name="shirt_number">Shirt Number</string>
     <string name="league">League</string>
     <string name="team">Team</string>
     <string name="qp">QP</string>

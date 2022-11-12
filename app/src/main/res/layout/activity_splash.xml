@@ -10,16 +10,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/light_primary"
+        android:background="@drawable/splash_screen_bg"
         tools:context=".presentation.SplashScreen">
 
 
         <ImageView
-            android:contentDescription="@string/this_is_an_image"
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_logo_blue"
+            android:contentDescription="@string/this_is_an_image"
+            android:src="@drawable/ic_logo_whit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,29 +29,29 @@
             android:id="@+id/tv_interactive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
             android:fontFamily="@font/sans_bold"
             android:text="@string/interactive_quiz"
-            android:textSize="@dimen/_16sdp"
             android:textColor="@color/grey_dark"
+            android:textSize="@dimen/_16sdp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/logo"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@+id/logo" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/sans_regular"
+            android:layout_marginTop="@dimen/_6sdp"
 
-            android:textSize="@dimen/_10sdp"
+            android:fontFamily="@font/sans_regular"
             android:text="@string/only_quiz"
             android:textColor="@color/grey"
+            android:textSize="@dimen/_10sdp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_interactive"
-            android:layout_marginTop="@dimen/_6sdp"
-            android:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_interactive" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

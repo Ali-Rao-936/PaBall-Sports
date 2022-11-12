@@ -8,30 +8,18 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.RelativeLayout
-import android.widget.Toast
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ex.score.nine.BaseActivity
 import com.ex.score.nine.R
 import com.ex.score.nine.data.ListResponse
-import com.ex.score.nine.databinding.ActivityMainBinding
-import com.ex.score.nine.domain.models.*
-import com.ex.score.nine.domain.models.lineup.Lineup
-import com.ex.score.nine.domain.models.lineup.Players
+import com.ex.score.nine.domain.models.Scores
 import com.ex.score.nine.presentation.adapters.AdapterTopScore
 import com.ex.score.nine.presentation.quiz.QuizActivity
 import com.ex.score.nine.presentation.sharedPreferences.Functions.fillSoccer
 import com.ex.score.nine.presentation.sharedPreferences.TeamsOrPlayers.getTeamsOrPlayersInSP
 import com.ex.score.nine.presentation.sharedPreferences.TeamsOrPlayers.saveTeamsOrPlayersInSP
-import com.ex.score.nine.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -41,7 +29,6 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var viewModel: HomeViewModel
 
-    lateinit var binding: ActivityMainBinding
     var search_edt: EditText? = null
     var cancel_button_rl: RelativeLayout? = null
     var scoresArrayList = ArrayList<Scores>()
@@ -51,7 +38,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        setContentView(R.layout.activity_main)
 
 
         //Casting
