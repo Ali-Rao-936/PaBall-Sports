@@ -11,6 +11,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ex.score.nine.R
 import com.ex.score.nine.domain.models.AnswersModel
@@ -20,7 +22,12 @@ import com.ex.score.nine.presentation.SplashScreen.Companion.playersList
 import com.ex.score.nine.presentation.SplashScreen.Companion.suggestionPlayersList
 import com.ex.score.nine.presentation.SplashScreen.Companion.suggestionTeamsList
 import com.ex.score.nine.presentation.SplashScreen.Companion.teamsList
+import com.ex.score.nine.domain.models.*
+import com.ex.score.nine.presentation.MainActivity
+import com.ex.score.nine.presentation.adapters.AdapterAnswar
+import com.ex.score.nine.presentation.adapters.AdapterTopScore
 import com.ex.score.nine.presentation.quiz.QuizActivity
+import com.ex.score.nine.presentation.sharedPreferences.Functions
 import com.ex.score.nine.presentation.sharedPreferences.QuizInfo.getCorrectAnswerFromSP
 import com.ex.score.nine.presentation.sharedPreferences.TeamsOrPlayers
 import com.ex.score.nine.utils.Constants
@@ -33,6 +40,7 @@ import kotlinx.coroutines.launch
 import java.lang.reflect.Type
 import java.util.Collections.shuffle
 import javax.inject.Inject
+import kotlin.random.Random
 
 
 private const val ARG_PARAM1 = "param1"
@@ -60,6 +68,7 @@ class FragmentQuestion : Fragment() {
     var fou_details_info: TextView? = null
     var question_number_tv: TextView? = null
     var image_view: ImageView? = null
+    var recycler_view_answers: RecyclerView? = null
 
     val gson = Gson()
     private lateinit var suggestionsTeamNamesList: ArrayList<String>
@@ -73,6 +82,7 @@ class FragmentQuestion : Fragment() {
     lateinit var teamInfo: TeamInfo
     lateinit var playerBio: PlayerBio
 
+    var adapterAnswar: AdapterAnswar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,7 +123,15 @@ class FragmentQuestion : Fragment() {
             } else
                 currentIndex = 0
 
+            correctAnswer = teamsQuestionsList[currentIndex].homeName
+            teamInfo = TeamInfo(teamsQuestionsList[currentIndex].homeName,teamsQuestionsList[currentIndex].leagueName, teamsQuestionsList[currentIndex].homeLogo,teamsQuestionsList[currentIndex].location)
+            //generate random answers
+            teamAnswersList = generateAnswersList(correctAnswer, suggestionsTeamNamesList)
+            teamAnswersList.add(AnswersModel(true, correctAnswer))
 
+            println(teamAnswersList)
+            shuffle(teamAnswersList)
+            println(teamAnswersList)
 
             cast(view)
             actionListenerToBack()
@@ -148,6 +166,7 @@ class FragmentQuestion : Fragment() {
             shuffle(answersList)
             println(answersList)
 
+            createAnswerRV()
 
             // when user answer is correct
             if (TeamsOrPlayers.getTeamsOrPlayersInSP(activity?.applicationContext).isNotEmpty()
@@ -193,10 +212,86 @@ class FragmentQuestion : Fragment() {
 //            shuffle(answersList)
 
             }
+//            teamAnswersList = generateAnswersList(correctAnswer, suggestionTeamsList)
+//            teamAnswersList.add(correctAnswer)
+//            shuffle(teamAnswersList)
+
+        }
+
+    }
+    var answersArrayList = java.util.ArrayList<AnswersModelT>()
+
+    private fun createAnswerRV() {
+        answersArrayList = Functions.fillTestAnswer(activity?.applicationContext)
+
+        recycler_view_answers?.setHasFixedSize(true)
+        val mLayoutManager = GridLayoutManager(activity?.applicationContext, 1)
+        recycler_view_answers?.setLayoutManager(mLayoutManager)
+        adapterAnswar = AdapterAnswar(activity?.applicationContext, answersArrayList)
+        recycler_view_answers?.setAdapter(adapterAnswar)
+    }
+
+    private fun getIndex(teamsList: ArrayList<Match>, questionsList: ArrayList<String>): Int {
+        val index = 0
+        for (i in 0..teamsList.size) {
+            if (!questionsList.contains(teamsList[i].homeLogo)) {
+                return i
+            }
+        }
+        return index
+    }
+
+    private fun generateAnswersList(correctAnswer: String, suggestionsList: ArrayList<String>): ArrayList<AnswersModel> {
+        val list = ArrayList<AnswersModel>()
+        for (i in 0..2) {
+            val randomName = generateAnswers(correctAnswer, suggestionsList, list)
+            list.add(AnswersModel(false, randomName))
+        }
+        return list
+    }
+
+    private fun generateAnswers(
+        name: String,
+        suggestionList: ArrayList<String>,
+        answersList: ArrayList<AnswersModel>
+    ): String {
+
+
+        val randomIndex = Random.nextInt(suggestionList.size)
+        val randomElement = suggestionList[randomIndex]
+        println(randomIndex)
+        return if (randomElement != name) {
+            randomElement
+//            if (!answersList.contains(randomElement))
+//                randomElement
+//            else {
+//                generateAnswers(name, suggestionList, answersList)
+//            }
+
+//            for (answer in answersList){
+//                if (answer == randomElement){
+//                    generateAnswers(name, suggestionList, answersList)
+//                }
+//            }
+
+        } else {
+            generateAnswers(name, suggestionList, answersList)
         }
 
     }
 
+    private fun shuffle(list: MutableList<AnswersModel>) {
+        // start from the end of the list
+        for (i in list.size - 1 downTo 1) {
+            // get a random index `j` such that `0 <= j <= i`
+            val j = Random.nextInt(i + 1)
+
+            // swap element at i'th position in the list with the element at j'th position
+            val temp = list[i]
+            list[i] = list[j]
+            list[j] = temp
+        }
+    }
 
     private fun fillImage(url: String) {
         activity?.applicationContext?.let { Glide.with(it).load(url).into(image_view!!) }
@@ -271,6 +366,7 @@ class FragmentQuestion : Fragment() {
         fou_details_info = view.findViewById(R.id.fou_details_info)
         question_number_tv = view.findViewById(R.id.question_number_tv)
         image_view = view.findViewById<ImageView>(R.id.image_view)
+        recycler_view_answers = view.findViewById<RecyclerView>(R.id.recycler_view_answers)
 
     }
 

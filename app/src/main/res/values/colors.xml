@@ -22,6 +22,12 @@
     <color name="red">#FF0000</color>
     <color name="details_cover_color">#E6F7FF</color>
     <color name="details_text_color">#4AAAF8</color>
+    <color name="correct_answar">#16D76F</color>
+    <color name="qu_bg">#F5F5F5</color>
+    <color name="red_incorrect">#F31629</color>
 
+    <color name="correct_after_incorrect">#4D14C1FA</color>
+
+    <color name="correct_after_incorrect_circl">#FFB72B</color>
 
 </resources>

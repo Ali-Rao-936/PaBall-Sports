@@ -38,6 +38,11 @@
     <string name="onboarding_body_3">Gather all the poins as much as you can, be a superstar in your class with Quizzy!</string>
     <string name="app_pref_name">pa_ball_sports</string>
 
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
+    <string name="d">D</string>
+
 
 
 </resources>

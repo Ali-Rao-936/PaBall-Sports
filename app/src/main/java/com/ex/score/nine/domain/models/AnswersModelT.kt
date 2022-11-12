@@ -1,7 +1,9 @@
 package com.ex.score.nine.domain.models
 
-data class AnswersModel(
+data class AnswersModelT(
     var correctOrNo : Boolean,
     var answer : String,
-    //var chara : String
+    var chara : String
+
+
 )
