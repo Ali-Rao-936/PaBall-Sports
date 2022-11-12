@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
@@ -11,6 +12,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.ex.score.nine.BaseActivity
 import com.ex.score.nine.R
+import com.ex.score.nine.data.network.ApiReqBannerAds.sentReqBanner
 import com.ex.score.nine.databinding.ActivitySplashBinding
 import com.ex.score.nine.domain.models.*
 import com.ex.score.nine.domain.models.lineup.Lineup
@@ -24,6 +26,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.json.JSONException
 import java.util.*
 import javax.inject.Inject
 
@@ -77,6 +80,12 @@ class SplashScreen : BaseActivity() {
         resources.updateConfiguration(config, resources.displayMetrics)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
+
+        try {
+            Handler().postDelayed({ sentReqBanner(applicationContext) }, 100)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
 
         initObserver()
 

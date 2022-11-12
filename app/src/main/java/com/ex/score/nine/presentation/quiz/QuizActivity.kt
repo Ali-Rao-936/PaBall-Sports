@@ -1,17 +1,26 @@
 package com.ex.score.nine.presentation.quiz
 
+import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.RelativeLayout
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.ex.score.nine.BaseActivity
 import com.ex.score.nine.R
+import com.ex.score.nine.data.ListResponse
+import com.ex.score.nine.domain.models.Ads
 import com.ex.score.nine.domain.models.PlayerBio
+import com.ex.score.nine.presentation.adapters.ViewPager2Adapter
 import com.ex.score.nine.presentation.fragments.quiz_fragments.FragmentQuestion
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class QuizActivity : BaseActivity() {
+class QuizActivity : BaseActivity() ,ViewPager2Adapter.PassAdsDetails {
 
     var questionCont: RelativeLayout? = null
     val gson = Gson()
@@ -23,6 +32,10 @@ class QuizActivity : BaseActivity() {
     private var savedQuestionsList = ArrayList<String>()
 
     lateinit var fragmentQuestion: FragmentQuestion
+
+    var viewPager2: ViewPager2? = null
+    var relativeLayout_con_viewPager2: RelativeLayout? = null
+    var viewPager2Adapter: ViewPager2Adapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +91,39 @@ class QuizActivity : BaseActivity() {
         statusBarColor()
         cast()
         handleQuestionFragment()
+        handelSlider()
     }
+
+    private fun handelSlider() {
+        if (!ListResponse.adsArrayList.isNullOrEmpty())
+        {
+            viewPager2Adapter = ViewPager2Adapter(this@QuizActivity, this)
+            viewPager2!!.adapter = viewPager2Adapter
+            viewPager2?.clipToPadding = false
+            viewPager2?.clipChildren = false
+            viewPager2?.offscreenPageLimit = 1
+            viewPager2?.getChildAt(0)?.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            infintLoop()
+            viewPager2?.isUserInputEnabled = false
+        }else{
+            relativeLayout_con_viewPager2?.visibility=View.GONE
+        }
+
+    }
+
+    private fun infintLoop() {
+        Handler().postDelayed({ moveSecondPage() }, 3000)
+    }
+
+    private fun moveSecondPage() {
+        if (viewPager2!!.currentItem == 0) {
+            viewPager2?.currentItem = 1
+        } else {
+            viewPager2?.currentItem = 0
+        }
+        infintLoop()
+    }
+
 
     private fun handleQuestionFragment() {
         fragmentQuestion = FragmentQuestion.newInstance("", "")
@@ -89,6 +134,8 @@ class QuizActivity : BaseActivity() {
 
     private fun cast() {
         questionCont = findViewById<RelativeLayout>(R.id.question_cont)
+        viewPager2=findViewById<ViewPager2>(R.id.viewpager)
+        relativeLayout_con_viewPager2=findViewById<RelativeLayout>(R.id.view2)
     }
 
 
@@ -106,6 +153,35 @@ class QuizActivity : BaseActivity() {
 
     private fun statusBarColor() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    }
+
+    override fun onClickedAdsDetails(adsDetails: Ads?) {
+        if (adsDetails!!.open_type.equals("1")) {
+            showDialogWebView(adsDetails.redirect_url)//keep error
+        }
+    }
+
+    public fun showDialogWebView(url:String) {
+        var shouldRefresh=false
+        val dialog= Dialog(this,android.R.style.ThemeOverlay)
+        dialog.setContentView(R.layout.web_view_dialog)
+
+        val web_view = dialog.findViewById<WebView>(R.id.web_vew)
+
+//        Log.i("TAG","getUrlFromSP(this): "+getUrlFromSP(this))
+//getUrlFromSP(this)
+        web_view.setWebViewClient(WebViewClient())
+        web_view.settings.javaScriptEnabled = true
+        web_view.loadUrl(url)
+
+        dialog.findViewById<View>(R.id.back_btn_rl_web_view).setOnClickListener {
+            dialog.dismiss()
+            if (shouldRefresh)
+                recreate()
+        }
+
+        dialog.show()
+        dialog.setCancelable(false)
     }
 
 //    private fun getPlayerIndex(playersList: ArrayList<PlayerBio>, questionsList: ArrayList<String>): Int {
