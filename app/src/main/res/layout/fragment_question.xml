@@ -95,6 +95,7 @@
             android:weightSum="100">
 
             <RelativeLayout
+                android:paddingHorizontal="@dimen/_10sdp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="36">
@@ -218,6 +219,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:paddingEnd="@dimen/_5sdp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="36">

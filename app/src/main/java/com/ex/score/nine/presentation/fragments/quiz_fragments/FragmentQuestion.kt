@@ -1,18 +1,21 @@
 package com.ex.score.nine.presentation.fragments.quiz_fragments
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.replace
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,11 +31,11 @@ import com.ex.score.nine.presentation.adapters.AdapterAnswar.PassTheAnswer
 import com.ex.score.nine.presentation.adapters.AdapterAnswarWithoutListener
 import com.ex.score.nine.presentation.fragments.reward_fragments.RewardFragment
 import com.ex.score.nine.presentation.quiz.QuizActivity
-import com.ex.score.nine.presentation.sharedPreferences.Functions
 import com.ex.score.nine.presentation.sharedPreferences.QuizInfo.getCorrectAnswerFromSP
 import com.ex.score.nine.presentation.sharedPreferences.QuizInfo.increCorrectAnswerFromSP
 import com.ex.score.nine.presentation.sharedPreferences.TeamsOrPlayers
 import com.ex.score.nine.utils.Constants
+import com.ex.score.nine.utils.ShowGameDialog
 import com.ex.score.nine.utils.Utils
 import com.ex.score.nine.utils.Utils.generateAnswersList
 import com.ex.score.nine.utils.Utils.getPlayerIndex
@@ -62,6 +65,7 @@ class FragmentQuestion : Fragment(), PassTheAnswer {
     private var param2: String? = null
 
     private var first_details_text: TextView? = null
+    private var isFirstQuestion = true
     var back_rl: RelativeLayout? = null
     var question_number: TextView? = null
     var qp_number_tv: TextView? = null
@@ -76,7 +80,7 @@ class FragmentQuestion : Fragment(), PassTheAnswer {
     var image_view: ImageView? = null
     var recycler_view_answers: RecyclerView? = null
 
-    lateinit var questionText : TextView
+    lateinit var questionText: TextView
 
     val gson = Gson()
     private lateinit var suggestionsTeamNamesList: ArrayList<String>
@@ -169,7 +173,7 @@ class FragmentQuestion : Fragment(), PassTheAnswer {
             println(answersList)
 
             if (answersList.isNotEmpty())
-            createAnswerRV(answersList)
+                createAnswerRV(answersList)
 
 //            teamAnswersList = generateAnswersList(correctAnswer, suggestionTeamsList)
 //            teamAnswersList.add(correctAnswer)
@@ -268,7 +272,7 @@ class FragmentQuestion : Fragment(), PassTheAnswer {
 
         thr_details_text?.text = activity?.resources?.getString(R.string.height)
         thr_details_info?.text = player.height + " cm"
-        println(" player height   "+player.height)
+        println(" player height   " + player.height)
 
         fillImage(player.photoUrl)
 
@@ -310,20 +314,19 @@ class FragmentQuestion : Fragment(), PassTheAnswer {
             }
     }
 
-    override fun onClick(answer: Boolean,answer_model:AnswersModelT) {
+    override fun onClick(answer: Boolean, answer_model: AnswersModelT) {
 
 
         if (answer)
             doForCorrectAnswer()
         else {
             createAnswerWithoutListener(answer_model)
-            Toast.makeText(context, "Wrong Answer", Toast.LENGTH_LONG).show()
         }
     }
 
     var answersWithoutListenerArrayList = ArrayList<AnswersModelIncorrect>()
 
-    private fun createAnswerWithoutListener(answer_model:AnswersModelT) {
+    private fun createAnswerWithoutListener(answer_model: AnswersModelT) {
         //answersArrayList
         answersWithoutListenerArrayList.clear()
         answersWithoutListenerArrayList.add(
@@ -361,16 +364,13 @@ class FragmentQuestion : Fragment(), PassTheAnswer {
 
 
 
-        for (i in answersWithoutListenerArrayList)
-        {
-            if (i.answer == answer_model.answer)
-            {
+        for (i in answersWithoutListenerArrayList) {
+            if (i.answer == answer_model.answer) {
                 //user choose then shod to set case number 2
                 i.check = 2
             }
 
-            if (i.correctOrNo)
-            {
+            if (i.correctOrNo) {
                 //user choose then shod to set case number 3
                 i.check = 3
 
@@ -379,10 +379,22 @@ class FragmentQuestion : Fragment(), PassTheAnswer {
         recycler_view_answers?.setHasFixedSize(true)
         val mLayoutManager = GridLayoutManager(activity?.applicationContext, 1)
         recycler_view_answers?.layoutManager = mLayoutManager
-        adapterAnswarWithoutListener = AdapterAnswarWithoutListener(activity?.applicationContext, answersWithoutListenerArrayList)
+        adapterAnswarWithoutListener = AdapterAnswarWithoutListener(
+            activity?.applicationContext,
+            answersWithoutListenerArrayList
+        )
         recycler_view_answers?.adapter = adapterAnswarWithoutListener
 
-        Timer("delayedxTime", true).schedule(2000) {
+        if (isFirstQuestion) {
+            // show popup
+            showWrongAnswerDialog()
+        } else {
+            goToRewardScreen()
+        }
+    }
+
+    private fun goToRewardScreen() {
+        Timer("delayedTime", true).schedule(2000) {
             val frag = RewardFragment()
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.container_question_fragment, frag)
@@ -392,7 +404,7 @@ class FragmentQuestion : Fragment(), PassTheAnswer {
 
     private fun doForCorrectAnswer() {
         // when user answer is correct
-
+        isFirstQuestion = false
         Timer("delayTime", true).schedule(2000) {
 
             lifecycleScope.launch {
@@ -421,6 +433,10 @@ class FragmentQuestion : Fragment(), PassTheAnswer {
                     shuffle(answersList)
                     setTeamDetails(teamsQuestionsList[currentIndex])
                     createAnswerRV(answersList)
+                    // increase question number
+                    increCorrectAnswerFromSP(context)
+                    setNumberOfPointsCollect()
+                    createAnswerRV(answersList)
                 } else {
                     Log.d("Qoo", " in players after correct")
                     val newPhotoUrl = showPlayersList[currentIndex].photoUrl
@@ -442,12 +458,67 @@ class FragmentQuestion : Fragment(), PassTheAnswer {
                     shuffle(answersList)
                     println(answersList)
                     setPlayerDetails(showPlayersList[currentIndex])
+                    // increase question number
                     increCorrectAnswerFromSP(context)
-                    // increase question nuber
                     setNumberOfPointsCollect()
                     createAnswerRV(answersList)
                 }
             }
         }
     }
+
+    private fun showWrongAnswerDialog() {
+        val dialog = Dialog(requireContext(), android.R.style.ThemeOverlay)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.play_aagain_layout)
+
+        //  initializing dialog screen
+        val btnStartAgain: AppCompatButton = dialog.findViewById(R.id.btnPlayAgain)
+        val btnQuit: AppCompatButton = dialog.findViewById(R.id.btnQuitGame)
+
+        btnQuit.setOnClickListener {
+            dialog.dismiss()
+            (activity as QuizActivity?)?.goBack()
+        }
+
+        btnStartAgain.setOnClickListener {
+            dialog.dismiss()
+            if (TeamsOrPlayers.getTeamsOrPlayersInSP(activity?.applicationContext).isNotEmpty()
+                &&
+                (TeamsOrPlayers.getTeamsOrPlayersInSP(activity?.applicationContext)
+                    .equals("empty")
+                        || TeamsOrPlayers.getTeamsOrPlayersInSP(activity?.applicationContext)
+                    .equals("teams"))
+            ) {
+
+                //  remove from current questions list
+                teamsQuestionsList.removeAt(currentIndex)
+                currentIndex = getTeamIndex(teamsQuestionsList, savedQuestionsList)
+                answersList.clear()
+                correctAnswer = teamsQuestionsList[currentIndex].homeName
+                answersList = generateAnswersList(correctAnswer, suggestionTeamsList)
+                answersList.add(AnswersModel(true, correctAnswer))
+                shuffle(answersList)
+                setTeamDetails(teamsQuestionsList[currentIndex])
+                createAnswerRV(answersList)
+            } else {
+                Log.d("Qoo", " in players after play again")
+                // remove from current questions list
+                showPlayersList.removeAt(currentIndex)
+                currentIndex = getPlayerIndex(playersList, savedQuestionsList)
+                answersList.clear()
+                correctAnswer = showPlayersList[currentIndex].name
+                answersList = generateAnswersList(correctAnswer, suggestionsList)
+                answersList.add(AnswersModel(true, correctAnswer))
+                shuffle(answersList)
+                println(answersList)
+                setPlayerDetails(showPlayersList[currentIndex])
+                increCorrectAnswerFromSP(context)
+            }
+        }
+
+        dialog.show()
+
+        }
 }

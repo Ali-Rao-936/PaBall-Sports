@@ -214,7 +214,8 @@ class SplashScreen : BaseActivity() {
 
         // for teams
         lifecycleScope.launch {
-            viewModel.getMatches(Utils.getLocale(preferences), pageNumber.toString())
+          //  viewModel.getMatches(Utils.getLocale(preferences), pageNumber.toString())
+            viewModel.getMatches("en", pageNumber.toString())
 
         }
         //       println(playersList[0].name)
@@ -266,7 +267,8 @@ class SplashScreen : BaseActivity() {
         else {
             pageNumber += 1
             lifecycleScope.launch {
-                viewModel.getMatches(Utils.getLocale(preferences), pageNumber.toString())
+            //    viewModel.getMatches(Utils.getLocale(preferences), pageNumber.toString())
+                viewModel.getMatches("en", pageNumber.toString())
 
             }
         }

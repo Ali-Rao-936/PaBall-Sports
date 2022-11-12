@@ -46,7 +46,9 @@
     <string name="b">B</string>
     <string name="c">C</string>
     <string name="d">D</string>
-
+    <string name="wrong_answer">Wrong Answer!</string>
+    <string name="play_again">Play Again</string>
+    <string name="quit_game">Quit Game</string>
 
 
 </resources>
