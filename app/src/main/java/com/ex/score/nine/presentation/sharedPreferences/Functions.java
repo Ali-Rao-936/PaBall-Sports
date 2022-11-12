@@ -8,6 +8,8 @@ import static com.ex.score.nine.presentation.sharedPreferences.PromptFrequency.s
 import android.content.Context;
 import android.util.Log;
 
+import com.ex.score.nine.R;
+import com.ex.score.nine.domain.models.AnswersModelT;
 import com.ex.score.nine.domain.models.Scores;
 
 import java.util.ArrayList;
@@ -171,6 +173,19 @@ public class Functions {
         scoresArrayList.add(new Scores("Khaled", "1090"));
         scoresArrayList.add(new Scores("Obeidat", "1030"));
         scoresArrayList.add(new Scores("Anwar", "850"));
+
+        return scoresArrayList;
+    }
+
+
+    public static ArrayList<AnswersModelT> fillTestAnswer(Context context) {
+
+        ArrayList<AnswersModelT> scoresArrayList = new ArrayList<>();
+        scoresArrayList.add(new AnswersModelT(false, "Jordan",context.getResources().getString(R.string.a)));
+        scoresArrayList.add(new AnswersModelT(true, "Egpt",context.getResources().getString(R.string.b)));
+        scoresArrayList.add(new AnswersModelT(false, "UAE",context.getResources().getString(R.string.c)));
+        scoresArrayList.add(new AnswersModelT(false, "USA",context.getResources().getString(R.string.d)));
+
 
         return scoresArrayList;
     }

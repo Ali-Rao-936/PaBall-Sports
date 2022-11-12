@@ -11,14 +11,16 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ex.score.nine.R
-import com.ex.score.nine.domain.models.AnswersModel
-import com.ex.score.nine.domain.models.Match
-import com.ex.score.nine.domain.models.PlayerBio
-import com.ex.score.nine.domain.models.TeamInfo
+import com.ex.score.nine.domain.models.*
 import com.ex.score.nine.presentation.MainActivity
+import com.ex.score.nine.presentation.adapters.AdapterAnswar
+import com.ex.score.nine.presentation.adapters.AdapterTopScore
 import com.ex.score.nine.presentation.quiz.QuizActivity
+import com.ex.score.nine.presentation.sharedPreferences.Functions
 import com.ex.score.nine.presentation.sharedPreferences.QuizInfo.getCorrectAnswerFromSP
 import com.ex.score.nine.presentation.sharedPreferences.TeamsOrPlayers
 import com.ex.score.nine.utils.Constants
@@ -58,6 +60,7 @@ class FragmentQuestion : Fragment() {
     var fou_details_info: TextView? = null
     var question_number_tv: TextView? = null
     var image_view: ImageView? = null
+    var recycler_view_answers: RecyclerView? = null
 
     val gson = Gson()
     private lateinit var suggestionsTeamNamesList: ArrayList<String>
@@ -69,6 +72,7 @@ class FragmentQuestion : Fragment() {
     lateinit var teamInfo: TeamInfo
     lateinit var playerBio: PlayerBio
 
+    var adapterAnswar: AdapterAnswar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,6 +134,7 @@ class FragmentQuestion : Fragment() {
                 //setPlayerDetails()
             }
 
+            createAnswerRV()
 
             // when user answer is correct
 //            val newPhotoUrl = teamsQuestionsList[currentIndex].homeLogo
@@ -151,6 +156,17 @@ class FragmentQuestion : Fragment() {
 
         }
         
+    }
+    var answersArrayList = java.util.ArrayList<AnswersModelT>()
+
+    private fun createAnswerRV() {
+        answersArrayList = Functions.fillTestAnswer(activity?.applicationContext)
+
+        recycler_view_answers?.setHasFixedSize(true)
+        val mLayoutManager = GridLayoutManager(activity?.applicationContext, 1)
+        recycler_view_answers?.setLayoutManager(mLayoutManager)
+        adapterAnswar = AdapterAnswar(activity?.applicationContext, answersArrayList)
+        recycler_view_answers?.setAdapter(adapterAnswar)
     }
 
     private fun getIndex(teamsList: ArrayList<Match>, questionsList: ArrayList<String>): Int {
@@ -284,6 +300,7 @@ class FragmentQuestion : Fragment() {
         fou_details_info = view.findViewById(R.id.fou_details_info)
         question_number_tv = view.findViewById(R.id.question_number_tv)
         image_view = view.findViewById<ImageView>(R.id.image_view)
+        recycler_view_answers = view.findViewById<RecyclerView>(R.id.recycler_view_answers)
 
     }
 
