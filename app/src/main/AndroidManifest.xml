@@ -52,7 +52,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.SplashActivity"
+            android:name=".presentation.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

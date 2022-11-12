@@ -3,21 +3,13 @@ package com.ex.score.nine.presentation.quiz
 import android.os.Bundle
 import android.view.View
 import android.widget.RelativeLayout
-import androidx.lifecycle.lifecycleScope
 import com.ex.score.nine.BaseActivity
 import com.ex.score.nine.R
 import com.ex.score.nine.domain.models.PlayerBio
-import com.ex.score.nine.presentation.MainActivity.Companion.playersList
-import com.ex.score.nine.presentation.MainActivity.Companion.suggestionPlayersList
 import com.ex.score.nine.presentation.fragments.quiz_fragments.FragmentQuestion
-import com.ex.score.nine.utils.Constants
-import com.ex.score.nine.utils.Utils
+import com.ex.score.nine.utils.Utils.generateAnswers
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import java.lang.reflect.Type
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -115,60 +107,60 @@ class QuizActivity : BaseActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 
-    private fun getIndex(playersList: ArrayList<PlayerBio>, questionsList: ArrayList<String>): Int {
-        val index = 0
-        for (i in 0..playersList.size) {
-            if (!questionsList.contains(playersList[i].photoUrl)) {
-                return i
-            }
-        }
-        return index
-    }
-
-    private fun generateAnswersList(
-        correctAnswer: String,
-        suggestionsList: ArrayList<String>
-    ): ArrayList<String> {
-        val list = ArrayList<String>()
-        for (i in 0..2) {
-            val randomName = generateAnswers(correctAnswer, suggestionsList, list)
-            list.add(randomName)
-        }
-        return list
-    }
-
-    private fun generateAnswers(
-        name: String,
-        suggestionList: ArrayList<String>,
-        answersList: ArrayList<String>
-    ): String {
-
-
-        val randomIndex = Random.nextInt(suggestionList.size)
-        val randomElement = suggestionList[randomIndex]
-        println(randomIndex)
-        return if (randomElement != name) {
-            if (!answersList.contains(randomElement))
-                randomElement
-            else {
-                generateAnswers(name, suggestionList, answersList)
-            }
-        } else {
-            generateAnswers(name, suggestionList, answersList)
-        }
-
-    }
-
-    private fun shuffle(list: MutableList<String>) {
-        // start from the end of the list
-        for (i in list.size - 1 downTo 1) {
-            // get a random index `j` such that `0 <= j <= i`
-            val j = Random.nextInt(i + 1)
-
-            // swap element at i'th position in the list with the element at j'th position
-            val temp = list[i]
-            list[i] = list[j]
-            list[j] = temp
-        }
-    }
+//    private fun getPlayerIndex(playersList: ArrayList<PlayerBio>, questionsList: ArrayList<String>): Int {
+//        val index = 0
+//        for (i in 0..playersList.size) {
+//            if (!questionsList.contains(playersList[i].photoUrl)) {
+//                return i
+//            }
+//        }
+//        return index
+//    }
+//
+//    private fun generateAnswersList(
+//        correctAnswer: String,
+//        suggestionsList: ArrayList<String>
+//    ): ArrayList<String> {
+//        val list = ArrayList<String>()
+//        for (i in 0..2) {
+//            val randomName = generatePlayerAnswers(correctAnswer, suggestionsList, list)
+//            list.add(randomName)
+//        }
+//        return list
+//    }
+//
+//    private fun generatePlayerAnswers(
+//        name: String,
+//        suggestionList: ArrayList<String>,
+//        answersList: ArrayList<String>
+//    ): String {
+//
+//
+//        val randomIndex = Random.nextInt(suggestionList.size)
+//        val randomElement = suggestionList[randomIndex]
+//        println(randomIndex)
+//        return if (randomElement != name) {
+//            if (!answersList.contains(randomElement))
+//                randomElement
+//            else {
+//                generatePlayerAnswers(name, suggestionList, answersList)
+//            }
+//        } else {
+//            generateAnswers(name, suggestionList, answersList)
+//        }
+//
+//    }
+//
+//    private fun shuffle(list: MutableList<String>) {
+//        // start from the end of the list
+//        for (i in list.size - 1 downTo 1) {
+//            // get a random index `j` such that `0 <= j <= i`
+//            val j = Random.nextInt(i + 1)
+//
+//            // swap element at i'th position in the list with the element at j'th position
+//            val temp = list[i]
+//            list[i] = list[j]
+//            list[j] = temp
+//        }
+//    }
 }
