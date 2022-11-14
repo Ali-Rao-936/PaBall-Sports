@@ -19,6 +19,15 @@
             app:layout_constraintBaseline_toTopOf="parent"
             android:background="@drawable/ic_bg_blue_2"/>
 
+        <ImageView
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/_10sdp"
+            android:src="@drawable/ic_baseline_language_24"
+            android:contentDescription="@string/this_is_an_image"
+            android:id="@+id/ivLanguages" />
+
 
         <LinearLayout
             android:layout_width="match_parent"

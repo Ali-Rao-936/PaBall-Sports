@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace 'com.ex.score.nine'
+    namespace 'com.pa.ball.sports.quiz'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.ex.score.nine"
+        applicationId "com.pa.ball.sports.quiz"
         minSdk 21
-        targetSdk 33
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 

@@ -38,6 +38,6 @@
         android:background="@drawable/bg_round_general_view"
         android:backgroundTint="@color/light_primary"
         android:text="@string/quit_game"
-        android:textColor="@color/white" />
+        android:textColor="@color/black" />
 
 </LinearLayout>

@@ -1,11 +1,11 @@
-package com.ex.score.nine.presenter.fragments.reward_fragments
+package com.pa.ball.quiz.presenter.fragments.reward_fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ex.score.nine.R
+import com.pa.ball.sports.quiz.R
 
 
 class RewardFragment : Fragment() {

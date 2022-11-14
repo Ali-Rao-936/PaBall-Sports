@@ -6,17 +6,19 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".MyApplication"
+        android:name="com.pa.ball.sports.quiz.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/ic_logo_blue"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_logo_blue"
-        android:supportsRtl="true"
         android:theme="@style/Theme.NewApplication"
+        android:supportsRtl="true"
+        android:largeHeap="true"
         tools:targetApi="31">
         <activity
+            android:theme="@style/AppTheme"
             android:name=".BaseActivity"
             android:exported="false">
             <meta-data
@@ -24,13 +26,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.quiz.RewardActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
+            android:theme="@style/QuiTheme"
             android:name=".presentation.quiz.QuizActivity"
             android:exported="false">
             <meta-data
@@ -38,6 +34,7 @@
                 android:value="" />
         </activity>
         <activity
+            android:theme="@style/AppTheme"
             android:name=".presentation.search.SearchActivity"
             android:exported="false">
             <meta-data
@@ -45,6 +42,7 @@
                 android:value="" />
         </activity>
         <activity
+            android:theme="@style/AppTheme"
             android:name=".presentation.OnboardingActivity"
             android:exported="false">
             <meta-data
@@ -52,6 +50,7 @@
                 android:value="" />
         </activity>
         <activity
+            android:theme="@style/SplashTheme"
             android:name=".presentation.SplashScreen"
             android:exported="true">
             <intent-filter>
@@ -65,6 +64,7 @@
                 android:value="" />
         </activity>
         <activity
+            android:theme="@style/AppTheme"
             android:name=".presentation.MainActivity"
             android:exported="false">
             <meta-data

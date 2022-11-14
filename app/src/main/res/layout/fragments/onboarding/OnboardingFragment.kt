@@ -1,4 +1,4 @@
-package com.ex.score.nine.presenter.fragments.onboarding
+package com.pa.ball.quiz.presenter.fragments.onboarding
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.ex.score.nine.R
-import com.ex.score.nine.presentation.fragments.onboarding.OnboardingFragment
+import com.pa.ball.sports.quiz.R
+import com.pa.ball.sports.quiz.presentation.fragments.onboarding.OnboardingFragment
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
